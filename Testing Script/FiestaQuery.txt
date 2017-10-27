@@ -1,0 +1,24 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+PREFIX ssn: <http://purl.oclc.org/NET/ssnx/ssn#> 
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
+PREFIX dul: <http://www.loa.istc.cnr.it/ontologies/DUL.owl#> 
+PREFIX geo:  <http://www.w3.org/2003/01/geo/wgs84_pos#> 
+SELECT ?value 
+WHERE { 
+			?obs a ssn:Observation .
+			?obs ssn:observedProperty ?qkr .
+			?qkr rdf:type ?qk .
+			?obs geo:location ?point .
+			?point geo:lat ?lat .
+			?point geo:long ?long .
+			?obs ssn:observationResult ?or . 
+			?or  ssn:hasValue ?v . 
+			?v dul:hasDataValue ?value .
+			FILTER( 
+			(xsd:double(?lat) >= "37.0"^^xsd:double) &&
+			(xsd:double(?lat) <= "70.0"^^xsd:double) &&
+			(xsd:double(?long) >= "-25.0"^^xsd:double) &&
+			(xsd:double(?long) <= "38.0"^^xsd:double))
+}
+ORDER BY ASC(?value)

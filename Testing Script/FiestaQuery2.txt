@@ -1,0 +1,19 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+PREFIX ssn: <http://purl.oclc.org/NET/ssnx/ssn#> 
+PREFIX iot-lite: <http://purl.oclc.org/NET/UNIS/fiware/iot-lite#> 
+PREFIX m3-lite: <http://purl.org/iot/vocab/m3-lite#> 
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
+PREFIX dul: <http://www.loa.istc.cnr.it/ontologies/DUL.owl#> 
+SELECT ?value 
+WHERE { 
+			?obs a ssn:Observation.
+			?obs ssn:observedProperty ?qkr.
+			?qkr rdf:type ?qk.
+			?obs ssn:observationResult ?or. 
+			?or  ssn:hasValue ?v.
+			?v dul:hasDataValue ?value.
+			VALUES ?qk {m3-lite:Temperature}
+			FILTER(xsd:double(?value) > "15.0"^^xsd:double)
+}
+ORDER BY ASC(?value)
